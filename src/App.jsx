@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Login } from "./pages/Login";
-import { Home } from "./pages/Home";
-import { Blogs } from "./pages/Blogs";
-import { Contact } from "./pages/Contact";
+import { Produccion } from "./pages/Produccion";
+import { Usuarios } from "./pages/Usuarios";
+import { Gestionar } from "./pages/Gestionar";
+import { General } from "./pages/General";
 import { NoPage } from "./pages/NoPage";
-
 
 function App() {
   return (
@@ -13,9 +13,10 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
         <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
-          <Route path="blogs" element={<Blogs />} />
-          <Route path="contact" element={<Contact />} />
+          <Route path="Gestionar" element={<Gestionar />} />
+          <Route path="Usuarios" element={<Usuarios />} />
+          <Route path="Produccion" element={<Produccion />} />
+          <Route path="General" element={<General />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

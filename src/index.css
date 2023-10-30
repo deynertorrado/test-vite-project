@@ -6,4 +6,10 @@
     .sidebar {
         transition:all .3s ease-in-out;
     }
+    .popup-class {
+        @apply rounded-md w-[400px]
+    }
+    .title-class {
+        @apply text-gray-900 font-Lato
+    }
 }
