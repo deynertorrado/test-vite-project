@@ -49,7 +49,7 @@ export const Layout = () => {
   return (
     <>
       <main className="flex font-Lato">
-        <aside>
+        <aside className="fixed">
           <div
             className={`${
               open ? "w-[260px]" : "w-20"
@@ -103,7 +103,7 @@ export const Layout = () => {
             </ul>
           </div>
         </aside>
-        <section>
+        <section className="ml-20">
           <Outlet />
         </section>
       </main>
