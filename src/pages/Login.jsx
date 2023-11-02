@@ -57,20 +57,25 @@ export const Login = () => {
     try {
       const res = await loginRequest(formState);
       const resName = res.data.name;
+      document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`
       // Venatana modal: Se muestra en caso de que la request sea válida
       Swal.fire({
         position: "center",
         icon: "success",
-        title: `¡Bienvenido ${resName}!`,
+        title: `¡Bienvenid@ ${resName}!`,
         showConfirmButton: false,
-        timerProgressBar: 1000,
+        timerProgressBar: 1500,
         timer: 1500,
         customClass: {
           popup: "popup-class",
           title: "title-class",
         },
       });
-      navigate("/home");
+      navigate("/", {
+        state: {
+            username: resName
+        }
+      });
     } catch (error) {
       // Venatana modal: Se muestra en caso de que la request sea inválida
       Swal.fire({
@@ -78,6 +83,7 @@ export const Login = () => {
         icon: "error",
         title: "¡Usuario sin autorización!",
         showConfirmButton: false,
+        timerProgressBar: 1500,
         timer: 1500,
         customClass: {
           popup: "popup-class",
