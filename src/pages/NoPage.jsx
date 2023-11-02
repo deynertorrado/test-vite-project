@@ -6,7 +6,7 @@ export const NoPage = () => {
   const navigate = useNavigate();
 
   const gotToLogin = () => {
-    navigate("/Home/Gestionar");
+    navigate("/");
   };
 
   return (
@@ -21,7 +21,7 @@ export const NoPage = () => {
           <span 
             class="relative block px-8 py-3 bg-[#1A2238] border border-current"
             onClick={gotToLogin}>
-            <p onClick={gotToLogin}>Ir al Home</p>
+            <p>Ir al Login</p>
           </span>
         </a>
       </button>
