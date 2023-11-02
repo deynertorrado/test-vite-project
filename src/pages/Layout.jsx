@@ -53,7 +53,7 @@ export const Layout = () => {
     } else {
       navigate("/Home/Gestionar", {
         state: {
-          username: username
+          username: username,
         },
       });
     }
@@ -64,8 +64,8 @@ export const Layout = () => {
     const navigateTo = target.innerText;
     navigate(`/Home/${navigateTo}`, {
       state: {
-        username: username
-      }
+        username: username,
+      },
     });
   };
 
@@ -118,7 +118,9 @@ export const Layout = () => {
                   <UserSquare2 size={20} />
                 </span>
                 <span
-                  className={`${!open && "scale-0"} origin-left duration-200 capitalize`}
+                  className={`${
+                    !open && "scale-0"
+                  } origin-left duration-200 capitalize`}
                 >
                   {username}
                 </span>

@@ -57,7 +57,7 @@ export const Login = () => {
     try {
       const res = await loginRequest(formState);
       const resName = res.data.name;
-      document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`
+      document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`;
       // Venatana modal: Se muestra en caso de que la request sea válida
       Swal.fire({
         position: "center",
@@ -73,8 +73,8 @@ export const Login = () => {
       });
       navigate("/Home/Gestionar", {
         state: {
-            username: resName
-        }
+          username: resName,
+        },
       });
     } catch (error) {
       // Venatana modal: Se muestra en caso de que la request sea inválida
