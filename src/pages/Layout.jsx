@@ -49,9 +49,9 @@ export const Layout = () => {
   useEffect(() => {
     if (state == null) {
       // En caso de que el usuario no esté autenticado lo redirigimos al Login
-      navigate("/Login");
+      navigate("/");
     } else {
-      navigate("/Gestionar", {
+      navigate("/Home/Gestionar", {
         state: {
           username: username
         },
@@ -62,7 +62,7 @@ export const Layout = () => {
   // Método que permite movernos entre los componentes definidos en el router
   const onHandleSection = ({ target }) => {
     const navigateTo = target.innerText;
-    navigate(`/${navigateTo}`, {
+    navigate(`/Home/${navigateTo}`, {
       state: {
         username: username
       }

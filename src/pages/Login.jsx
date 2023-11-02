@@ -71,7 +71,7 @@ export const Login = () => {
           title: "title-class",
         },
       });
-      navigate("/", {
+      navigate("/Home/Gestionar", {
         state: {
             username: resName
         }
