@@ -34,7 +34,7 @@ export const Layout = () => {
   const options = [
     { title: "Gestionar", icon: <LayoutDashboard size={20} /> },
     { title: "Usuarios", icon: <Users size={20} /> },
-    { title: "Producción", icon: <PackagePlus size={20} /> },
+    { title: "Produccion", icon: <PackagePlus size={20} /> },
     { title: "General", icon: <ScanText size={20} /> },
   ];
 

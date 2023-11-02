@@ -11,8 +11,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/*" element={<NoPage />} />
         <Route index path="/" element={<Login />} />
-        <Route path="*" element={<NoPage />} />
         <Route path="/Home" element={<Layout />}>
           <Route path="Gestionar" element={<Gestionar />} />
           <Route path="Usuarios" element={<Usuarios />} />
