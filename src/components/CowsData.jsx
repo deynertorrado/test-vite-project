@@ -11,6 +11,7 @@ import {
     Pencil
   } from "lucide-react";
 
+// Componente Complementario
 export const CowsData = ({ sendDataToParent, updateTableHandler1, updateTableHandler2 }) => {
 
     // ------------- Proceso para traer los datos de las Vaquitas en la API -------------

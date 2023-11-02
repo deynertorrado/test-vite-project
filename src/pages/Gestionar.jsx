@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 // Importación de Componentes
 import { CowsData } from "../components/CowsData"
 
+// Componente Principal
 export const Gestionar = () => {
 
   // ------------- Proceso para tomar los datos -------------
