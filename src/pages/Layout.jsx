@@ -54,6 +54,7 @@ export const Layout = () => {
       navigate("/Home/Gestionar", {
         state: {
           username: username,
+          logged: true
         },
       });
     }
@@ -65,6 +66,7 @@ export const Layout = () => {
     navigate(`/Home/${navigateTo}`, {
       state: {
         username: username,
+        logged: true
       },
     });
   };

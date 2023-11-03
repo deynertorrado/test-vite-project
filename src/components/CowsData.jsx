@@ -11,32 +11,40 @@ import { Trash2, Pencil } from "lucide-react";
 // Componente Complementario
 export const CowsData = ({
   sendDataToParent,
-  updateTableHandler1,
-  updateTableHandler2,
+  activateEffect,
+  resetActivateEffect
 }) => {
   // ------------- Proceso para traer los datos de las Vaquitas en la API -------------
   // Definimos los estados para almacenar las Vaquitas
   const [cowData, setCowData] = useState([]);
-  // Establecemos los estados para filtrar datos
+
+  // ------------- Establecemos los estados para filtrar datos -------------
+  // Buscar datos
   const [search, setSearch] = useState("");
+  // Datos filtrados
   const [filter, setFilter] = useState([]);
+  // Carga de Datos
   const [pending, setPending] = useState(true);
 
-  // Traemos los datos de las vaquitas en la API
-  useEffect(() => {
-    async function getData() {
-      try {
-        const res = await getCowsRequest(document.cookie.replace("token=", ""));
-        setCowData(res.data);
-        setPending(false);
-        setFilter(res.data);
-      } catch (error) {
-        console.log(error);
-      }
+  // Definimos una función para traer los datos de las vaquitas en la API
+  async function getData() {
+    try {
+      const res = await getCowsRequest(document.cookie.replace("token=", ""));
+      setCowData(res.data);
+      setPending(false);
+      setFilter(res.data);
+    } catch (error) {
+      console.log(error);
     }
-    getData();
-  }, [updateTableHandler1, updateTableHandler2, onSelectedCow]);
+  }
 
+  // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
+  useEffect(() => {
+      getData()
+      resetActivateEffect(false)
+  }, [activateEffect, resetActivateEffect]);
+
+  // Definimos una función para mandar los datos al padre dependiendo de la acción a realizar
   function onSelectedCow(cowCode, action) {
     // Enviamos los datos del elemento seleccionado al padre
     const selectedCow = cowData.find((cow) => cow.cow_code === cowCode);
@@ -107,7 +115,7 @@ export const CowsData = ({
   const tableHeaderStyle = {
     headCells: {
       style: {
-        backgroundColor: "#1E293B",
+        backgroundColor: "#c05621",
         fontSize: "15px",
         color: "#FFFFFF",
         fontWeight: "600",

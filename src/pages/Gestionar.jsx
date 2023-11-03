@@ -10,7 +10,6 @@ import { CowsData } from "../components/CowsData"
 
 // Componente Principal
 export const Gestionar = () => {
-
   // ------------- Proceso para tomar los datos -------------
   // Estado Inicial del "cowForm"
   const cowForm = {
@@ -65,6 +64,8 @@ export const Gestionar = () => {
             title: "title-class",
           },
         })
+        // Actualizamos los datos de la tabla
+        setActivateEffect(true)
       } else {
         toast.fire({
           icon: 'error',
@@ -94,8 +95,15 @@ export const Gestionar = () => {
   // ------------- Proceso para actualizar los datos -------------
   // Definimos un state para mostrar los elementos de edición
   const [editar, setEditar] = useState(false)
+
   // Definimos un state para tomar el código del elemento a editar
   const [selectedCowID, setSelectedCowID] = useState(null)
+  
+  // Definimos un state para actualizar los datos de la tabla del componente hijo
+  const [activateEffect, setActivateEffect] = useState(false)
+  const resetActivateEffect = () => {
+    setActivateEffect(false)
+  }
 
   // Definimos un método para traer los datos del elemento a editar desde el hijo
   const getSonData = (data, action) => {
@@ -140,6 +148,8 @@ export const Gestionar = () => {
             title: "title-class",
           },
         })
+        // Actualizamos los datos de la tabla
+        setActivateEffect(true)
       } else {
         toast.fire({
           icon: 'error',
@@ -196,7 +206,6 @@ export const Gestionar = () => {
   }
 
   // ------------- Proceso para eliminar datos -------------
-  // Cuadro de diálogo de eliminación
   const onDeleteData = (cowID) => {
     async function deleteData() {
       const res = await deleteCowsRequest(cowID, document.cookie.replace('token=', ''))
@@ -216,6 +225,8 @@ export const Gestionar = () => {
             title: "title-class",
           },
         })
+        // Actualizamos los datos de la tabla
+        setActivateEffect(true)
       } else {
         toast.fire({
           icon: 'error',
@@ -363,7 +374,7 @@ export const Gestionar = () => {
           </div>
         </div>
         <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
-          <CowsData sendDataToParent={getSonData} updateTableHandler1={selectedCowID} updateTableHandler2={getSonData}/>
+          <CowsData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect}/>
         </div>
       </div>
     </>
