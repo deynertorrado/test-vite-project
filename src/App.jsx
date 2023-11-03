@@ -6,6 +6,7 @@ import { Usuarios } from "./pages/Usuarios";
 import { Gestionar } from "./pages/Gestionar";
 import { General } from "./pages/General";
 import { NoPage } from "./pages/NoPage";
+import { Logout } from "./pages/Logout";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="*" element={<NoPage />} />
         <Route index path="/" element={<Login />} />
+        <Route path="/Logout" element={<Logout />} />
         <Route path="/Home" element={<Layout />}>
           <Route path="Gestionar" element={<Gestionar />} />
           <Route path="Usuarios" element={<Usuarios />} />

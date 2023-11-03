@@ -53,8 +53,7 @@ export const Layout = () => {
     } else {
       navigate("/Home/Gestionar", {
         state: {
-          username: username,
-          logged: true
+          username: username
         },
       });
     }
@@ -65,11 +64,18 @@ export const Layout = () => {
     const navigateTo = target.innerText;
     navigate(`/Home/${navigateTo}`, {
       state: {
-        username: username,
-        logged: true
+        username: username
       },
     });
   };
+
+  const onLogout = () => {
+    navigate('/Logout', {
+      state: {
+        username: username
+      }
+    })
+  }
 
   return (
     <>
@@ -128,7 +134,7 @@ export const Layout = () => {
                 </span>
               </li>
             </ul>
-            <ul className="mt-1">
+            <ul className="mt-1" onClick={onLogout}>
               <li className="ffont-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md">
                 <span className="shadow-md shadow-gray-900 bg-red-500 rounded-md p-2">
                   <Power size={20} />
