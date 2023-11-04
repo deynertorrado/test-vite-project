@@ -1,5 +1,6 @@
 // Importaciones de React
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 // Librerías Externas y Locales
 import { postCowsRequest, putCowsRequest, deleteCowsRequest } from "../services/request";
@@ -10,6 +11,10 @@ import { CowsData } from "../components/CowsData"
 
 // Componente Principal
 export const Gestionar = () => {
+
+  const { state } = useLocation();
+  let logged = state.logged;
+
   // ------------- Proceso para tomar los datos -------------
   // Estado Inicial del "cowForm"
   const cowForm = {
@@ -374,7 +379,7 @@ export const Gestionar = () => {
           </div>
         </div>
         <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
-          <CowsData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect}/>
+          <CowsData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect} logged={logged}/>
         </div>
       </div>
     </>

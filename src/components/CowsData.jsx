@@ -12,7 +12,8 @@ import { Trash2, Pencil } from "lucide-react";
 export const CowsData = ({
   sendDataToParent,
   activateEffect,
-  resetActivateEffect
+  resetActivateEffect,
+  logged
 }) => {
   // ------------- Proceso para traer los datos de las Vaquitas en la API -------------
   // Definimos los estados para almacenar las Vaquitas
@@ -31,13 +32,20 @@ export const CowsData = ({
     try {
       const res = await getCowsRequest(document.cookie.replace("token=", ""));
       setCowData(res.data);
-      setPending(false);
       setFilter(res.data);
+      setPending(false);
     } catch (error) {
       console.log(error);
     }
   }
 
+  // Definimos un useEffect para obtener los datos en primera instancia
+  useEffect(() => {
+    if (logged === true) {
+      getData()
+    }
+  }, [logged])
+  
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
   useEffect(() => {
       getData()
@@ -128,6 +136,14 @@ export const CowsData = ({
     },
   };
 
+  // Configuramos la paginación de la DataTable en español
+  const paginationComponentOptions = {
+      rowsPerPageText: 'Filas por página',
+      rangeSeparatorText: 'de',
+      selectAllRowsItem: true,
+      selectAllRowsItemText: 'Todos',
+  };
+
   return (
     <div className="max-h-[480px] overflow-scroll rounded-md">
       <DataTable
@@ -135,8 +151,11 @@ export const CowsData = ({
         columns={columns}
         data={filter}
         pagination
-        selectableRowsHighlight
+        // selectableRowsHighlight
         progressPending={pending}
+        paginationComponentOptions={paginationComponentOptions}
+        fixedHeader={true}
+        fixedHeaderScrollHeight="360px"
         subHeader
         subHeaderComponent={
           <div className="flex w-full gap-5 items-center mb-3">
@@ -145,7 +164,7 @@ export const CowsData = ({
             </p>
             <input
               type="text"
-              placeholder="Filtar..."
+              placeholder="Filtar por nombre"
               value={search}
               className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 shadow-sm pl-2 pr-2 border-2 border-gray-200 py-1 focus:outline-none focus:border-slate-500 rounded-lg"
               onChange={(e) => setSearch(e.target.value)}

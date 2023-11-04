@@ -15,6 +15,9 @@ import {
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+// Librerías Externas y Locales
+import Swal from "sweetalert2";
+
 // Componente Principal
 export const Layout = () => {
   // Definimos un useState para manejar el estado del sidebar
@@ -43,7 +46,9 @@ export const Layout = () => {
   // Estos nos permiten validar si el usuario ha iniciado sesión correctamente
   const navigate = useNavigate();
   const { state } = useLocation();
-  let username = state == null ? "Unknow" : state.username;
+  let name = state == null ? "Unknow" : state.name;
+  let userName = state == null ? "Unknow" : state.userName;
+  let userType = state == null ? "Unknow" : state.userType;
 
   // Hacemos uso de useEffect para validar al autenticación del usuario
   useEffect(() => {
@@ -53,27 +58,53 @@ export const Layout = () => {
     } else {
       navigate("/Home/Gestionar", {
         state: {
-          username: username
+          name: name,
+          userName: userName,
+          userType: userType,
+          logged: true
         },
       });
     }
   }, []);
 
   // Método que permite movernos entre los componentes definidos en el router
-  const onHandleSection = ({ target }) => {
-    const navigateTo = target.innerText;
+  const onHandleSection = (title) => {
+    const navigateTo = title;
     navigate(`/Home/${navigateTo}`, {
       state: {
-        username: username
+        name: name,
+        userName: userName,
+        userType: userType,
+        logged: true
       },
-    });
+    })
   };
 
+  // Método que nos permite salir del sistema
   const onLogout = () => {
     navigate('/Logout', {
       state: {
-        username: username
+        name: name
       }
+    })
+  }
+
+  // Método que permite mostrar la información del usuario
+  const onShowUserInfo = () => {
+    Swal.fire({
+      icon: 'info',
+      title: 'Información',
+      html:
+        `<p><b>Nombre</b>: ${name}<p/> ` +
+        `<p><b>Usuario</b>: ${userName}<p/> ` +
+        `<p><b>Tipo</b>: ${userType}<p/>`,
+      showConfirmButton: false,
+      timerProgressBar: 5000,
+      timer: 5000,
+      customClass: {
+        popup: "popup-class",
+        title: "title-class",
+      },
     })
   }
 
@@ -107,21 +138,22 @@ export const Layout = () => {
                 <li
                   key={index}
                   className="font-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md"
-                  onClick={onHandleSection}
+                  onClick={() => onHandleSection(menu.title)}
                 >
-                  <span className="shadow-md shadow-gray-900 rounded-md p-2">
-                    {menu.icon}
+                  <span className="shadow-lg shadow-gray-900 rounded-md p-2">
+                      {menu.icon}
                   </span>
                   <span
-                    className={`${!open && "scale-0"} origin-left duration-200`}
-                  >
-                    {menu.title}
+                      className={`${!open && "scale-0"} origin-left duration-200`}>
+                      {menu.title}
                   </span>
                 </li>
               ))}
             </ul>
             <ul className="mt-[180px]">
-              <li className="font-semibold text-white text-md flex items-center gap-x-4 cursor-default p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md">
+              <li 
+                className="font-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md"
+                onClick={onShowUserInfo}>
                 <span className="shadow-md shadow-gray-900 bg-emerald-600 rounded-md p-2">
                   <UserSquare2 size={20} />
                 </span>
@@ -130,7 +162,7 @@ export const Layout = () => {
                     !open && "scale-0"
                   } origin-left duration-200 capitalize`}
                 >
-                  {username}
+                  {name}
                 </span>
               </li>
             </ul>

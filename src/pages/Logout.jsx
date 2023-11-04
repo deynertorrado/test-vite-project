@@ -14,7 +14,7 @@ export const Logout = () => {
   // Estos nos permiten validar si el usuario ha estado en el sistema con anterioridad
   const { state } = useLocation();
   const navigate = useNavigate();
-  let username = state.username;
+  let name = state.name;
 
   // Este método nos retorna al "Login"
   const onLogin = () => {
@@ -48,7 +48,7 @@ export const Logout = () => {
                 ¡Gracias por haber utilizado nuestra plataforma!
               </p>
               <p className="text-md text-center italic text-slate-900 font-semibold">
-                @{username}
+                @{name}
               </p>
             </div>
             <button

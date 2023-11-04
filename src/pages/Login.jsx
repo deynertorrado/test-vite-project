@@ -56,28 +56,45 @@ export const Login = () => {
     e.preventDefault();
     try {
       const res = await loginRequest(formState);
-      const resName = res.data.name;
-      document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`;
-      // Venatana modal: Se muestra en caso de que la request sea válida
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: `¡Bienvenid@ ${resName}!`,
-        showConfirmButton: false,
-        timerProgressBar: 1500,
-        timer: 1500,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      });
-      navigate("/Home/Gestionar", {
-        state: {
-          username: resName,
-        },
-      });
+      if (res.status === 200) {
+        const { name, userName, userType } = res.data;
+        document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`;
+        // Venatana modal: Se muestra en caso de que la request sea válida
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `¡Bienvenid@ ${name}!`,
+          showConfirmButton: false,
+          timerProgressBar: 1000,
+          timer: 1000,
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        });
+        navigate("/Home/Gestionar", {
+          state: {
+            name: name,
+            userName: userName,
+            userType: userType
+          },
+        });
+      } else {
+        // Venatana modal: Se muestra en caso de que la request sea inválida
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "¡Usuario sin autorización!",
+          showConfirmButton: false,
+          timerProgressBar: 1500,
+          timer: 1500,
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        });
+      }
     } catch (error) {
-      // Venatana modal: Se muestra en caso de que la request sea inválida
       Swal.fire({
         position: "center",
         icon: "error",
