@@ -56,7 +56,7 @@ export const Logout = () => {
               className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-semibold rounded-md text-md px-7 py-2.5 text-center mb-6 mt-3 flex items-center justify-center gap-2"
               onClick={onLogin}
             >
-              <span class="capitalize font-semibold">Ingresar</span>
+              <span class="font-semibold">Ir al Login</span>
               <span>
                 <DoorOpen size={20} strokeWidth={2} />
               </span>
