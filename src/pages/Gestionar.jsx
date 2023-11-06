@@ -46,6 +46,12 @@ export const Gestionar = () => {
     });
   }
 
+  // Definimos un state para actualizar los datos de la tabla del componente hijo
+  const [activateEffect, setActivateEffect] = useState(false)
+  const resetActivateEffect = () => {
+    setActivateEffect(false)
+  }
+
   // ------------ Proceso para enviar, validar y almacenar los datos -------------
   // Enviamos los datos del "cowForm" a la API para validarlos y guardar una nueva Vaquita
   const onSubmitForm = async (e) => {
@@ -104,12 +110,6 @@ export const Gestionar = () => {
   // Definimos un state para tomar el código del elemento a editar
   const [selectedCowID, setSelectedCowID] = useState(null)
   
-  // Definimos un state para actualizar los datos de la tabla del componente hijo
-  const [activateEffect, setActivateEffect] = useState(false)
-  const resetActivateEffect = () => {
-    setActivateEffect(false)
-  }
-
   // Definimos un método para traer los datos del elemento a editar desde el hijo
   const getSonData = (data, action) => {
     // Si los datos vienen con la acción de "edit" enviamos los datos del 

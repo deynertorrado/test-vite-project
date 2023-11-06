@@ -17,6 +17,74 @@ const loginRequest = async (formState) => {
     }
 };
 
+// POST: Petición para crear un nuevo usuario
+const postUserRequest = async (formState, token) => {
+    try {
+        const response = await axios.post('https://exps-mvc-api.vercel.app/api/users', {
+            ...formState
+        }, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// GET: Petición para obtener los datos de los usuarios
+const getUserRequest = async (token) => {
+    try {
+        const response = await axios.get('https://exps-mvc-api.vercel.app/api/users', {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// PUT: Petición para actualizar un usuario
+const putUserRequest = async (formState, token) => {
+    try {
+        const response = await axios.put('https://exps-mvc-api.vercel.app/api/users', {
+            ...formState
+        }, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// DELETE: Petición para eliminar un usuario
+const deleteUserRequest = async (userID, token) => {
+    try {
+        const response = await axios.delete(`https://exps-mvc-api.vercel.app/api/users/${userID}`, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 // GET: Petición para obtener los datos de las vacas
 const getCowsRequest = async (token) => {
     try {
@@ -51,7 +119,7 @@ const postCowsRequest = async (formState, token) => {
     }
 }
 
-// PUT: Petición para agregar una nueva vaca
+// PUT: Petición para actualizar una vaca
 const putCowsRequest = async (formState, token) => {
     try {
         const response = await axios.put('https://exps-mvc-api.vercel.app/api/cows', {
@@ -69,6 +137,7 @@ const putCowsRequest = async (formState, token) => {
     }
 }
 
+// DELETE: Petición para eliminar una vaca
 const deleteCowsRequest = async (cowID, token) => {
     try {
         const response = await axios.delete(`https://exps-mvc-api.vercel.app/api/cows/${cowID}`, {
@@ -84,4 +153,4 @@ const deleteCowsRequest = async (cowID, token) => {
     }
 }
 
-export { loginRequest, getCowsRequest, postCowsRequest, putCowsRequest, deleteCowsRequest }
+export { loginRequest, getCowsRequest, postCowsRequest, putCowsRequest, deleteCowsRequest, postUserRequest, putUserRequest, getUserRequest, deleteUserRequest}

@@ -41,7 +41,9 @@ export const CowsData = ({
 
   // Definimos un useEffect para obtener los datos en primera instancia
   useEffect(() => {
-      getData()
+      setTimeout(() => {
+        getData()
+      }, 2000);
   }, [logged])
   
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset

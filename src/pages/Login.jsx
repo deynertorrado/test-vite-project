@@ -58,7 +58,7 @@ export const Login = () => {
       const res = await loginRequest(formState);
       if (res.status === 200) {
         const { name, userName, userType } = res.data;
-        document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/;`;
+        document.cookie = `token=${res.data.token}; max-age=${60 * 60}; path=/; SameSite=none;`;
         // Venatana modal: Se muestra en caso de que la request sea válida
         Swal.fire({
           position: "center",
