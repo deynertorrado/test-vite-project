@@ -140,7 +140,7 @@ export const Layout = () => {
                   className="font-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md"
                   onClick={() => onHandleSection(menu.title)}
                 >
-                  <span className="shadow-lg shadow-gray-900 rounded-md p-2">
+                  <span className="shadow-lg shadow-gray-900 rounded-md p-2 dark:shadow-none">
                       {menu.icon}
                   </span>
                   <span
@@ -154,7 +154,7 @@ export const Layout = () => {
               <li 
                 className="font-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md"
                 onClick={onShowUserInfo}>
-                <span className="shadow-md shadow-gray-900 bg-emerald-600 rounded-md p-2">
+                <span className="shadow-md shadow-gray-900 bg-emerald-600 rounded-md p-2 dark:shadow-none">
                   <UserSquare2 size={20} />
                 </span>
                 <span
@@ -168,7 +168,7 @@ export const Layout = () => {
             </ul>
             <ul className="mt-1" onClick={onLogout}>
               <li className="ffont-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md">
-                <span className="shadow-md shadow-gray-900 bg-red-500 rounded-md p-2">
+                <span className="shadow-md shadow-gray-900 bg-red-500 rounded-md p-2 dark:shadow-none">
                   <Power size={20} />
                 </span>
                 <span
