@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import { CowsData } from "../components/CowsData"
 
 // Componente Principal
-export const Gestionar = () => {
+export const Manage = () => {
 
   const { state } = useLocation();
   let logged = state.logged;

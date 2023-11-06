@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Login } from "./pages/Login";
-import { Produccion } from "./pages/Produccion";
-import { Usuarios } from "./pages/Usuarios";
-import { Gestionar } from "./pages/Gestionar";
+import { Production } from "./pages/Production";
+import { Users } from "./pages/Users";
+import { Manage } from "./pages/Manage";
 import { General } from "./pages/General";
 import { NoPage } from "./pages/NoPage";
 import { Logout } from "./pages/Logout";
@@ -16,9 +16,9 @@ function App() {
         <Route index path="/" element={<Login />} />
         <Route path="/Logout" element={<Logout />} />
         <Route path="/Home" element={<Layout />}>
-          <Route path="Gestionar" element={<Gestionar />} />
-          <Route path="Usuarios" element={<Usuarios />} />
-          <Route path="Produccion" element={<Produccion />} />
+          <Route path="Gestionar" element={<Manage />} />
+          <Route path="Usuarios" element={<Users />} />
+          <Route path="Produccion" element={<Production />} />
           <Route path="General" element={<General />} />
         </Route>
       </Routes>

@@ -15,7 +15,7 @@ import {
   Eye
 } from "lucide-react";
 
-export const Usuarios = () => {
+export const Users = () => {
 
   const { state } = useLocation();
   let logged = state.logged;
