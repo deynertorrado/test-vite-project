@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 
 // Librerías Externas y Locales
 import { getCowsRequest } from "../services/request";
+import * as XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 
 // Iconos
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Download } from "lucide-react";
 
 // Componente Complementario
 export const CowsData = ({
@@ -144,6 +145,15 @@ export const CowsData = ({
       selectAllRowsItemText: 'Todos',
   };
 
+  // Función que permite exportar los registros en formato XLSX
+  const converToXLSX = () => {
+    const ws = XLSX.utils.json_to_sheet(cowData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const fileName = 'cowsData.xlsx';
+    XLSX.writeFile(wb, fileName)
+  }
+
   return (
     <div className="max-h-[480px] overflow-scroll rounded-md">
       <DataTable
@@ -158,17 +168,24 @@ export const CowsData = ({
         fixedHeaderScrollHeight="360px"
         subHeader
         subHeaderComponent={
-          <div className="flex w-full gap-5 items-center mb-3">
+          <div className="flex w-full items-center mb-3 justify-between">
             <p className="font-Lato text-lg font-semibold text-slate-800">
               Tabla de Datos
             </p>
-            <input
-              type="text"
-              placeholder="Filtar por nombre"
-              value={search}
-              className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 shadow-sm pl-2 pr-2 border-2 border-gray-200 py-1 focus:outline-none focus:border-slate-500 rounded-lg"
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="flex items-center">
+              <input
+                type="text"
+                placeholder="Buscar"
+                value={search}
+                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-slate-200 py-1 focus:outline-none focus:border-slate-400 rounded-md"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button 
+                className="ml-4 text-gray-400 p-1 rounded-md hover:bg-slate-200 duration-100"
+                onClick={converToXLSX}>
+                <Download size={18}/>
+              </button>
+            </div>
           </div>
         }
       />
