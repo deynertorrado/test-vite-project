@@ -13,8 +13,7 @@ export const UsersData = ({
     sendDataToParent,
     activateEffect,
     resetActivateEffect,
-    logged,
-    currentlyUser
+    logged
   }) => {
 
     // ------------- Proceso para traer los datos de los Usuarios en la API -------------
@@ -33,10 +32,8 @@ export const UsersData = ({
     async function getData() {
         try {
           const res = await getUserRequest(document.cookie.replace("token=", ""));
-          // Filtrar los datos para excluir el usuario actual
-          const filteredData = res.data.filter(user => user.username !== currentlyUser);
-          setUserData(filteredData);
-          setFilter(filteredData);
+          setUserData(res.data);
+          setFilter(res.data);
           setPending(false);
         } catch (error) {
           console.log(error);
@@ -57,13 +54,13 @@ export const UsersData = ({
     }, [activateEffect, resetActivateEffect]);
 
     // Definimos una función para mandar los datos al padre dependiendo de la acción a realizar
-    function onSelectedUser(userCode, action) {
+    function onSelectedUser(userCode, action, currentlyUser) {
         // Enviamos los datos del elemento seleccionado al padre
         const selectedUser = userData.find((user) => user.id === userCode);
         if (action === "edit") {
             sendDataToParent(selectedUser, action);
         } else {
-            sendDataToParent(selectedUser.id, action);
+            sendDataToParent(selectedUser.id, action, currentlyUser);
         }
     }
 
@@ -95,13 +92,13 @@ export const UsersData = ({
                 <div className="flex gap-[5px]">
                 <button
                     className="text-white bg-cyan-500 p-[3px] rounded-md hover:bg-cyan-700 duration-75"
-                    onClick={() => onSelectedUser(row.id, "edit")}
+                    onClick={() => onSelectedUser(row.id, "edit", row.username)}
                 >
                     <Pencil size={15} />
                 </button>
                 <button
                     className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-700 duration-75"
-                    onClick={() => onSelectedUser(row.id, "delete")}
+                    onClick={() => onSelectedUser(row.id, "delete", row.username)}
                 >
                     <Trash2 size={15} />
                 </button>

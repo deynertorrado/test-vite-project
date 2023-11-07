@@ -115,7 +115,7 @@ export const Users = () => {
   const [selectedUserID, setSelectedUserID] = useState(null)
 
   // Definimos un método para traer los datos del elemento a editar desde el hijo
-  const getSonData = (data, action) => {
+  const getSonData = (data, action, user) => {
     // Si los datos vienen con la acción de "edit" enviamos los datos del 
     // elemento seleccionado a los respectivos inputs
     if (action === 'edit') {
@@ -130,7 +130,7 @@ export const Users = () => {
       setEditar(true)
     } else {
       // En caso contrario se procede a eliminar los datos
-      onDeleteData(data)
+      onDeleteData(data, user)
     }
   }
 
@@ -213,56 +213,73 @@ export const Users = () => {
   }
 
   // ------------- Proceso para eliminar datos -------------
-  const onDeleteData = (userID) => {
-    async function deleteData() {
-      const res = await deleteUserRequest(userID, document.cookie.replace('token=', ''))
-      const toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
+  const onDeleteData = (userID, user) => {
+    console.log(user)
+    if (currentlyUser == user) {
+      Swal.fire({
+        title: '¡Error!',
+        text: "¡No puedes realizar esta acción!",
+        icon: 'error',
+        showCancelButton: false,
         showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
       })
-      if (res.status == 200) {
-        toast.fire({
-          icon: 'success',
-          title: '¡Se ha eliminado correctamente!',
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
+    } else {
+      async function deleteData() {
+        const res = await deleteUserRequest(userID, document.cookie.replace('token=', ''))
+        const toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
         })
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true)
-      } else {
-        toast.fire({
-          icon: 'error',
-          title: '¡Ocurrió un error!',
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
-        })
+        if (res.status == 200) {
+          toast.fire({
+            icon: 'success',
+            title: '¡Se ha eliminado correctamente!',
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          })
+          // Actualizamos los datos de la tabla
+          setActivateEffect(true)
+        } else {
+          toast.fire({
+            icon: 'error',
+            title: '¡Ocurrió un error!',
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          })
+        }
       }
+      Swal.fire({
+        title: '¿Estás segur@?',
+        text: "¡No podrás revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, eliminar',
+        cancelButtonText: 'No, cancelar',
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteData()
+        }
+      })
     }
-    Swal.fire({
-      title: '¿Estás segur@?',
-      text: "¡No podrás revertir esta acción!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar',
-      cancelButtonText: 'No, cancelar',
-      customClass: {
-        popup: "popup-class",
-        title: "title-class",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteData()
-      }
-    })
   }
   
 
@@ -371,7 +388,7 @@ export const Users = () => {
           </div>
         </div>
         <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
-          <UsersData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect} logged={logged} currentlyUser={currentlyUser}/>
+          <UsersData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect} logged={logged}/>
         </div>
       </div>
     </>
