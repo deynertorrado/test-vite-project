@@ -43,7 +43,7 @@ export const CowsData = ({
   useEffect(() => {
       setTimeout(() => {
         getData()
-      }, 2000);
+      }, 1000);
   }, [logged])
   
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
@@ -54,7 +54,7 @@ export const CowsData = ({
 
   // Definimos una función para mandar los datos al padre dependiendo de la acción a realizar
   function onSelectedCow(cowCode, action) {
-    // Enviamos los datos del elemento seleccionado al padre
+    // Enviamos los datos del elemento seleccionado al componente padre
     const selectedCow = cowData.find((cow) => cow.cow_code === cowCode);
     if (action === "edit") {
       sendDataToParent(selectedCow, action);
@@ -63,7 +63,7 @@ export const CowsData = ({
     }
   }
 
-  // Columnas de la tabla de datos
+  // Columnas del DataTable
   const columns = [
     {
       name: "Código",
