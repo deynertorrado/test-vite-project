@@ -14,7 +14,7 @@ export const CowsData = ({
   sendDataToParent,
   activateEffect,
   resetActivateEffect,
-  logged
+  logged,
 }) => {
   // ------------- Proceso para traer los datos de las Vaquitas en la API -------------
   // Definimos los estados para almacenar las Vaquitas
@@ -42,15 +42,15 @@ export const CowsData = ({
 
   // Definimos un useEffect para obtener los datos en primera instancia
   useEffect(() => {
-      setTimeout(() => {
-        getData()
-      }, 5000);
-  }, [logged])
-  
+    setTimeout(() => {
+      getData();
+    }, 8000);
+  }, [logged]);
+
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
   useEffect(() => {
-      getData()
-      resetActivateEffect(false)
+    getData();
+    resetActivateEffect(false);
   }, [activateEffect, resetActivateEffect]);
 
   // Definimos una función para mandar los datos al padre dependiendo de la acción a realizar
@@ -139,20 +139,20 @@ export const CowsData = ({
 
   // Configuramos la paginación de la DataTable en español
   const paginationComponentOptions = {
-      rowsPerPageText: 'Filas por página',
-      rangeSeparatorText: 'de',
-      selectAllRowsItem: true,
-      selectAllRowsItemText: 'Todos',
+    rowsPerPageText: "Filas por página",
+    rangeSeparatorText: "de",
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "Todos",
   };
 
   // Función que permite exportar los registros en formato XLSX
   const converToXLSX = () => {
     const ws = XLSX.utils.json_to_sheet(cowData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    const fileName = 'cowsData.xlsx';
-    XLSX.writeFile(wb, fileName)
-  }
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    const fileName = "cowsData.xlsx";
+    XLSX.writeFile(wb, fileName);
+  };
 
   return (
     <div className="max-h-[480px] overflow-scroll rounded-md">
@@ -180,10 +180,11 @@ export const CowsData = ({
                 className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-slate-200 py-1 focus:outline-none focus:border-slate-400 rounded-md"
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <button 
+              <button
                 className="ml-4 text-gray-400 p-1 rounded-md hover:bg-slate-200 duration-100"
-                onClick={converToXLSX}>
-                <Download size={18}/>
+                onClick={converToXLSX}
+              >
+                <Download size={18} />
               </button>
             </div>
           </div>

@@ -44,7 +44,7 @@ export const ProdData = ({
   useEffect(() => {
     setTimeout(() => {
       getData();
-    }, 5000);
+    }, 8000);
   }, []);
 
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
