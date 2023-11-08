@@ -360,7 +360,7 @@ export const ProdComponent = () => {
             </div>
             <div className="mb-2">
               <label htmlFor="date" className="block mb-2 text-md font-bold">
-                Litros:
+                Fecha de Producción:
               </label>
               <input
                 type="date"
