@@ -157,7 +157,7 @@ const deleteCowsRequest = async (cowID, token) => {
 // POST: Petición para agregar producción lechera
 const postProductionRequest = async (formState, token) => {
     try {
-        const response = await axios.post('http://localhost:3000/api/production', {
+        const response = await axios.post('https://exps-mvc-api.vercel.app/api/production', {
             ...formState
         }, {
             headers: {
@@ -175,7 +175,7 @@ const postProductionRequest = async (formState, token) => {
 // GET: Petición para obtener los datos de la producción
 const getProductionRequest = async (token) => {
     try {
-        const response = await axios.get('http://localhost:3000/api/production', {
+        const response = await axios.get('https://exps-mvc-api.vercel.app/api/production', {
             headers: {
                 Authorization: token,
                 'Access-Control-Allow-Origin': '*',
@@ -191,7 +191,7 @@ const getProductionRequest = async (token) => {
 // PUT: Petición para actualizar una vaca
 const putProductionRequest = async (formState, token) => {
     try {
-        const response = await axios.put('http://localhost:3000/api/production', {
+        const response = await axios.put('https://exps-mvc-api.vercel.app/api/production', {
             ...formState
         }, {
             headers: {
@@ -209,7 +209,7 @@ const putProductionRequest = async (formState, token) => {
 // DELETE: Petición para eliminar una vaca
 const deleteProductionRequest = async (productionID, token) => {
     try {
-        const response = await axios.delete(`http://localhost:3000/api/production/${productionID}`, {
+        const response = await axios.delete(`https://exps-mvc-api.vercel.app/api/production/${productionID}`, {
             headers: {
                 Authorization: token,
                 'Access-Control-Allow-Origin': '*',
