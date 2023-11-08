@@ -153,4 +153,87 @@ const deleteCowsRequest = async (cowID, token) => {
     }
 }
 
-export { loginRequest, getCowsRequest, postCowsRequest, putCowsRequest, deleteCowsRequest, postUserRequest, putUserRequest, getUserRequest, deleteUserRequest}
+
+// POST: Petición para agregar producción lechera
+const postProductionRequest = async (formState, token) => {
+    try {
+        const response = await axios.post('http://localhost:3000/api/production', {
+            ...formState
+        }, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// GET: Petición para obtener los datos de la producción
+const getProductionRequest = async (token) => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/production', {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// PUT: Petición para actualizar una vaca
+const putProductionRequest = async (formState, token) => {
+    try {
+        const response = await axios.put('http://localhost:3000/api/production', {
+            ...formState
+        }, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// DELETE: Petición para eliminar una vaca
+const deleteProductionRequest = async (productionID, token) => {
+    try {
+        const response = await axios.delete(`http://localhost:3000/api/production/${productionID}`, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export { 
+    loginRequest, 
+    getCowsRequest, 
+    postCowsRequest, 
+    putCowsRequest, 
+    deleteCowsRequest, 
+    postUserRequest, 
+    putUserRequest, 
+    getUserRequest, 
+    deleteUserRequest, 
+    postProductionRequest, 
+    getProductionRequest,
+    putProductionRequest,
+    deleteProductionRequest
+}

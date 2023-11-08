@@ -7,6 +7,8 @@ import { Manage } from "./pages/Manage";
 import { General } from "./pages/General";
 import { NoPage } from "./pages/NoPage";
 import { Logout } from "./pages/Logout";
+import { ProdComponent } from "./components/ProdComponent";
+import { ProdGraphic } from "./components/ProdGraphic";
 
 function App() {
   return (
@@ -15,10 +17,13 @@ function App() {
         <Route path="*" element={<NoPage />} />
         <Route index path="/" element={<Login />} />
         <Route path="/Logout" element={<Logout />} />
-        <Route path="/Home" element={<Layout />}>
+        <Route path="/Inicio" element={<Layout />} >
           <Route path="Gestionar" element={<Manage />} />
           <Route path="Usuarios" element={<Users />} />
-          <Route path="Produccion" element={<Production />} />
+          <Route path="Produccion" element={<Production />} >
+            <Route path="Agregar" element={<ProdComponent />} />
+            <Route path="Consultar" element={<ProdGraphic />} />
+          </Route>
           <Route path="General" element={<General />} />
         </Route>
       </Routes>

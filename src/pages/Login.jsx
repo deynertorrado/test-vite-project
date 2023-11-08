@@ -72,7 +72,7 @@ export const Login = () => {
             title: "title-class",
           },
         });
-        navigate("/Home/Gestionar", {
+        navigate("/Inicio/Gestionar", {
           state: {
             name: name,
             userName: userName,

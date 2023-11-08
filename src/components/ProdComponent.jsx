@@ -1,53 +1,88 @@
 // Importaciones de React
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 // Librerías Externas y Locales
 import {
-  postUserRequest,
-  putUserRequest,
-  deleteUserRequest,
+  postProductionRequest,
+  putProductionRequest,
+  deleteProductionRequest,
+  getCowsRequest,
 } from "../services/request";
 import Swal from "sweetalert2";
 
 // Importación de Componentes
-import { UsersData } from "../components/UsersData";
+import { ProdData } from "./ProdData";
 
-// Iconos
-import { EyeOff, Eye } from "lucide-react";
-
-export const Users = () => {
-  const { state } = useLocation();
-  let logged = state.logged;
-  let currentlyUser = state.userName;
-
+// Componente Principal
+export const ProdComponent = () => {
   // ------------- Proceso para tomar los datos -------------
-  // Estado Inicial del "userForm"
-  const userForm = {
-    userName: "",
-    user: "",
-    userType: "",
-    userPassword: "",
+  // Estado Inicial del "productionForm"
+  const productionForm = {
+    date: "",
+    production: "",
   };
 
-  // Manejo de estado del "userForm"
-  const [formState, setFormState] = useState(userForm);
+  // Definimos un state para almacenar el identificador de la vaca
+  const [cowId, setCowId] = useState(null);
 
-  // Obtenemos los valores de los atributos del "userForm"
-  const { userName, user, userType, userPassword } = formState;
+  // Manejo de estado del "productionForm"
+  const [formState, setFormState] = useState(productionForm);
 
-  // Función que nos permite setear los inputs del "userForm"
+  // Obtenemos los valores de los atributos del "productionForm"
+  const { date, production } = formState;
+
+  // Función que nos permite setear los inputs del "productionForm"
   const resetFormState = () => {
-    setFormState(userForm);
+    setFormState(productionForm);
+    setText("");
   };
 
-  // Obtenemos los valores de los inputs del "userForm"
+  // Obtenemos los valores de los inputs del "productionForm"
   const onInputChange = ({ target }) => {
     const { name, value } = target;
     setFormState({
       ...formState,
       [name]: value,
     });
+  };
+
+  // -------------- Definimos los elementos para el Autocomplete --------------
+  const [options, setOptions] = useState([]);
+  const [text, setText] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
+  // Definimos un useEffect para obtener los datos en primera instancia
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await getCowsRequest(document.cookie.replace("token=", ""));
+        setOptions(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
+
+  // Funcion que toma los valores de input y filtrar datos
+  const onChangeHandler = (text) => {
+    let matches = [];
+    if (text.length > 0) {
+      matches = options.filter((cow) => {
+        const regex = new RegExp(`${text}`, "gi");
+        return cow.cow_name.match(regex);
+      });
+    }
+    console.log("matches", matches);
+    setSuggestions(matches);
+    setText(text);
+  };
+
+  // Función que permite dar sugerencias de búsqueda al consultar los datos
+  const onSuggestHandler = (text, id) => {
+    setCowId(id);
+    setText(text);
+    setSuggestions([]);
   };
 
   // Definimos un state para actualizar los datos de la tabla del componente hijo
@@ -57,15 +92,19 @@ export const Users = () => {
   };
 
   // ------------ Proceso para enviar, validar y almacenar los datos -------------
-  // Enviamos los datos del "userForm" a la API para validarlos y guardar un nuevo Usuario
+  // Enviamos los datos del "cowForm" a la API para validarlos y guardar una nueva Vaquita
   const onSubmitForm = async (e) => {
     e.preventDefault();
     const verifyInputs = Object.values(formState).every(
       (value) => value !== ""
     );
     if (verifyInputs) {
-      const res = await postUserRequest(
-        formState,
+      const data = {
+        ...formState,
+        cowID: cowId,
+      };
+      const res = await postProductionRequest(
+        data,
         document.cookie.replace("token=", "")
       );
       const toast = Swal.mixin({
@@ -117,34 +156,38 @@ export const Users = () => {
   const [editar, setEditar] = useState(false);
 
   // Definimos un state para tomar el código del elemento a editar
-  const [selectedUserID, setSelectedUserID] = useState(null);
+  const [selectedProductionID, setSelectedProductionID] = useState(null);
+  const [selectedCowID, setSelectedCowID] = useState(null);
 
   // Definimos un método para traer los datos del elemento a editar desde el hijo
-  const getSonData = (data, action, user) => {
+  const getSonData = (data, action) => {
     // Si los datos vienen con la acción de "edit" enviamos los datos del
     // elemento seleccionado a los respectivos inputs
     if (action === "edit") {
       setFormState({
-        userName: data.name,
-        user: data.username,
-        userType: data.type,
-        userPassword: data.password,
+        date: data.date,
+        production: data.production,
       });
+      setText(data.vacas.cow_name);
       // Mostramos los elementos de edición
-      setSelectedUserID(data.id);
+      setSelectedProductionID(data.id);
+      setSelectedCowID(data.id_cow);
       setEditar(true);
     } else {
-      // En caso contrario se procede a eliminar los datos, pasamos "user"
-      // para verificar que no se elimine el usuario actual
-      onDeleteData(data, user);
+      // En caso contrario se procede a eliminar los datos
+      onDeleteData(data);
     }
   };
 
-  // Enviamos los datos del "userForm" a la API para validarlos y actualizar el Usuario
+  // Enviamos los datos del "productionForm" a la API para validarlos y actualizar la Producción
   const onEditData = (e) => {
     async function putData() {
-      const data = { ...formState, userId: selectedUserID };
-      const res = await putUserRequest(
+      const data = {
+        ...formState,
+        productionId: selectedProductionID,
+        cowID: selectedCowID,
+      };
+      const res = await putProductionRequest(
         data,
         document.cookie.replace("token=", "")
       );
@@ -224,171 +267,127 @@ export const Users = () => {
   };
 
   // ------------- Proceso para eliminar datos -------------
-  const onDeleteData = (userID, user) => {
-    // Verificamos si el usuario a eliminar es el mismo que el usuario actual, en ese
-    // rechazamos la ejecución de la función y mandamos una advertencia
-    if (currentlyUser == user) {
-      Swal.fire({
-        title: "¡Error!",
-        text: "¡No puedes realizar esta acción!",
-        icon: "error",
-        showCancelButton: false,
+  const onDeleteData = (productionID) => {
+    async function deleteData() {
+      const res = await deleteProductionRequest(
+        productionID,
+        document.cookie.replace("token=", "")
+      );
+      const toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
         showConfirmButton: false,
         timer: 2000,
         timerProgressBar: true,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
       });
-    } else {
-      async function deleteData() {
-        const res = await deleteUserRequest(
-          userID,
-          document.cookie.replace("token=", "")
-        );
-        const toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
+      if (res.status == 200) {
+        toast.fire({
+          icon: "success",
+          title: "¡Se ha eliminado correctamente!",
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
         });
-        if (res.status == 200) {
-          toast.fire({
-            icon: "success",
-            title: "¡Se ha eliminado correctamente!",
-            customClass: {
-              popup: "popup-class",
-              title: "title-class",
-            },
-          });
-          // Actualizamos los datos de la tabla
-          setActivateEffect(true);
-        } else {
-          toast.fire({
-            icon: "error",
-            title: "¡Ocurrió un error!",
-            customClass: {
-              popup: "popup-class",
-              title: "title-class",
-            },
-          });
-        }
+        // Actualizamos los datos de la tabla
+        setActivateEffect(true);
+      } else {
+        toast.fire({
+          icon: "error",
+          title: "¡Ocurrió un error!",
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        });
       }
-      Swal.fire({
-        title: "¿Estás segur@?",
-        text: "¡No podrás revertir esta acción!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, eliminar",
-        cancelButtonText: "No, cancelar",
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteData();
-        }
-      });
     }
-  };
-
-  // Definimo un state y una función para visualizar o ocultar la contraseña
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
+    Swal.fire({
+      title: "¿Estás segur@?",
+      text: "¡No podrás revertir esta acción!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar",
+      cancelButtonText: "No, cancelar",
+      customClass: {
+        popup: "popup-class",
+        title: "title-class",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteData();
+      }
+    });
   };
 
   return (
     <>
-      <p className="text-4xl text-gray-800 font-semibold mt-4 ml-8">Usuarios</p>
       <div className="flex w-full gap-4">
-        <div className="mt-3 ml-4 p-4 w-[35%]">
-          <p className="text-xl text-gray-800 font-semibold mb-3">
-            Agregar nuevo usuario
+        <div className="ml-4 p-4 w-[35%]">
+          <p className="text-xl text-gray-800 font-semibold mb-3 ml-2">
+            Agregar Producción
           </p>
           <form className="w-full bg-white shadow-xl rounded-md py-5 px-7">
-            <div className="flex gap-5 text-gray-800">
-              <div className="mb-2">
-                <label
-                  htmlFor="userName"
-                  className="block mb-2 text-md font-bold"
-                >
-                  Nombre:
-                </label>
-                <input
-                  type="text"
-                  name="userName"
-                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                  placeholder="Nombre"
-                  onChange={onInputChange}
-                  value={userName}
-                  required
-                ></input>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="user" className="block mb-2 text-md font-bold">
-                  Usuario:
-                </label>
-                <input
-                  type="text"
-                  name="user"
-                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                  placeholder="Usuario"
-                  onChange={onInputChange}
-                  value={user}
-                  required
-                ></input>
+            <div className="mb-2">
+              <label htmlFor="cow" className="block mb-2 text-md font-bold">
+                Vaca:
+              </label>
+              <input
+                type="text"
+                name="cow"
+                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                placeholder="Buscar vaca"
+                value={text}
+                onChange={(e) => onChangeHandler(e.target.value)}
+                required
+              ></input>
+              <div className="absolute shadow-lg bg-gray-200 w-[320px]">
+                {suggestions &&
+                  suggestions.map((suggestions, i) => (
+                    <div
+                      className="px-3 py-2 cursor-pointer hover:bg-gray-300"
+                      onClick={() =>
+                        onSuggestHandler(suggestions.cow_name, suggestions.id)
+                      }
+                      key={i}
+                    >
+                      {suggestions.cow_name}
+                    </div>
+                  ))}
               </div>
             </div>
             <div className="mb-2">
-              <label
-                htmlFor="userType"
-                className="block mb-2 text-md font-bold"
-              >
-                Tipo:
+              <label htmlFor="date" className="block mb-2 text-md font-bold">
+                Litros:
               </label>
-              <select
-                name="userType"
+              <input
+                type="date"
+                name="date"
                 className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                onInput={onInputChange}
-                value={userType}
+                placeholder=""
+                value={date}
+                onChange={onInputChange}
                 required
-              >
-                <option value="">-- Selecciona un tipo --</option>
-                <option value="Normal">Normal</option>
-                <option value="Administrativo">Administrativo</option>
-              </select>
+              ></input>
             </div>
             <div className="mb-4">
               <label
-                htmlFor="userPassword"
+                htmlFor="production"
                 className="block mb-2 text-md font-bold"
               >
-                Contraseña:
+                Litros:
               </label>
-              <div className="flex">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="userPassword"
-                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg rounded-tr-none rounded-br-none"
-                  placeholder="Contraseña"
-                  onChange={onInputChange}
-                  value={userPassword}
-                  required
-                ></input>
-                <button
-                  onClick={toggleShowPassword}
-                  className="px-3 bg-gray-200 rounded-tr-lg rounded-br-lg"
-                  type="button"
-                >
-                  {!showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+              <input
+                type="number"
+                name="production"
+                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                placeholder="Litros"
+                value={production}
+                onChange={onInputChange}
+                required
+              ></input>
             </div>
           </form>
           <div className="mt-6 ml-4">
@@ -429,12 +428,11 @@ export const Users = () => {
             )}
           </div>
         </div>
-        <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
-          <UsersData
+        <div className="w-[60%] bg-white max-h-[480px] shadow-xl rounded-md py-5 px-6">
+          <ProdData
             sendDataToParent={getSonData}
             activateEffect={activateEffect}
             resetActivateEffect={resetActivateEffect}
-            logged={logged}
           />
         </div>
       </div>

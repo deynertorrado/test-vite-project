@@ -56,7 +56,7 @@ export const Layout = () => {
       // En caso de que el usuario no esté autenticado lo redirigimos al Login
       navigate("/");
     } else {
-      navigate("/Home/Gestionar", {
+      navigate("/Inicio/Gestionar", {
         state: {
           name: name,
           userName: userName,
@@ -70,7 +70,7 @@ export const Layout = () => {
   // Método que permite movernos entre los componentes definidos en el router
   const onHandleSection = (title) => {
     const navigateTo = title;
-    navigate(`/Home/${navigateTo}`, {
+    navigate(`/Inicio/${navigateTo}`, {
       state: {
         name: name,
         userName: userName,

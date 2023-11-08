@@ -302,7 +302,7 @@ export const Manage = () => {
                   required
                   value={cowBreed}
                   onChange={onInputChange}>
-                  <option value="">Selecciona una raza...</option>
+                  <option value="">-- Selecciona una raza --</option>
                   <option value="GYR">GYR</option>
                   <option value="Mestiza">Mestiza</option>
                   <option value="Carora">Carora</option>
