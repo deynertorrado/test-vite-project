@@ -160,7 +160,7 @@ export const ProdData = ({
   };
 
   return (
-    <div className="max-h-[430px] overflow-scroll rounded-md">
+    <div className="max-h-[438px] overflow-scroll rounded-md">
       <DataTable
         customStyles={tableHeaderStyle}
         columns={columns}
@@ -169,7 +169,7 @@ export const ProdData = ({
         progressPending={pending}
         paginationComponentOptions={paginationComponentOptions}
         fixedHeader={true}
-        fixedHeaderScrollHeight="330px"
+        fixedHeaderScrollHeight="320px"
         subHeader
         subHeaderComponent={
           <div className="flex w-full items-center mb-3 justify-between">
