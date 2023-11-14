@@ -40,12 +40,12 @@ export const ProdData = ({
     }
   }
 
-  // Definimos un useEffect para obtener los datos en primera instancia
-  useEffect(() => {
-    setTimeout(() => {
-      getData();
-    }, 8000);
-  }, []);
+  // // Definimos un useEffect para obtener los datos en primera instancia
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getData();
+  //   }, 5000);
+  // }, []);
 
   // Definimos un useEffect para actualizar los datos dependiendo del Activate y Reset
   useEffect(() => {
