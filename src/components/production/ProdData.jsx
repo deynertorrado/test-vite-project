@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Librerías Externas y Locales
-import { getProductionRequest } from "../services/request";
+import { getProductionRequest } from "../../services/request";
 import * as XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 

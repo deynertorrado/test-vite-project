@@ -222,6 +222,22 @@ const deleteProductionRequest = async (productionID, token) => {
     }
 }
 
+// GET: Petición para obtener los datos de la producción
+const getGraphicData = async (token, id = 20) => {
+    try {
+        const response = await axios.get(`https://exps-mvc-api.vercel.app/api/production/graph/${id}`, {
+            headers: {
+                Authorization: token,
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export { 
     loginRequest, 
     getCowsRequest, 
@@ -235,5 +251,6 @@ export {
     postProductionRequest, 
     getProductionRequest,
     putProductionRequest,
-    deleteProductionRequest
+    deleteProductionRequest,
+    getGraphicData
 }

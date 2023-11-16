@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 // Iconos
-import { CopyPlus, Search } from "lucide-react";
+import { CopyPlus, BarChart } from "lucide-react";
 
 // Componente Principal
 export const Production = () => {
@@ -57,9 +57,9 @@ export const Production = () => {
               onClick={() => onHandleSection("Consultar")}
             >
               <span>
-                <Search size={16} />
+                <BarChart size={16} />
               </span>
-              <span className="text-lg ml-2">Consultar</span>
+              <span className="text-lg ml-2">Gráfica</span>
             </li>
           </ul>
         </div>

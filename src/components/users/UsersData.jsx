@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Librerías Externas y Locales
-import { getCowsRequest } from "../services/request";
+import { getUserRequest } from "../../services/request";
 import * as XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 
@@ -10,15 +10,15 @@ import DataTable from "react-data-table-component";
 import { Trash2, Pencil, Download } from "lucide-react";
 
 // Componente Complementario
-export const CowsData = ({
+export const UsersData = ({
   sendDataToParent,
   activateEffect,
   resetActivateEffect,
   logged,
 }) => {
-  // ------------- Proceso para traer los datos de las Vaquitas en la API -------------
-  // Definimos los estados para almacenar las Vaquitas
-  const [cowData, setCowData] = useState([]);
+  // ------------- Proceso para traer los datos de los Usuarios en la API -------------
+  // Definimos los estados para almacenar los Usuarios
+  const [userData, setUserData] = useState([]);
 
   // ------------- Establecemos los estados para filtrar datos -------------
   // Buscar datos
@@ -28,11 +28,11 @@ export const CowsData = ({
   // Carga de Datos
   const [pending, setPending] = useState(true);
 
-  // Definimos una función para traer los datos de las vaquitas en la API
+  // Definimos una función para traer los datos de los usuarios en la API
   async function getData() {
     try {
-      const res = await getCowsRequest(document.cookie.replace("token=", ""));
-      setCowData(res.data);
+      const res = await getUserRequest(document.cookie.replace("token=", ""));
+      setUserData(res.data);
       setFilter(res.data);
       setPending(false);
     } catch (error) {
@@ -54,13 +54,15 @@ export const CowsData = ({
   }, [activateEffect, resetActivateEffect]);
 
   // Definimos una función para mandar los datos al padre dependiendo de la acción a realizar
-  function onSelectedCow(cowCode, action) {
+  function onSelectedUser(userCode, action, user) {
     // Enviamos los datos del elemento seleccionado al componente padre
-    const selectedCow = cowData.find((cow) => cow.cow_code === cowCode);
+    const selectedUser = userData.find((user) => user.id === userCode);
     if (action === "edit") {
-      sendDataToParent(selectedCow, action);
+      sendDataToParent(selectedUser, action);
     } else {
-      sendDataToParent(selectedCow.id, action);
+      // En caso de ejecutar la acción de eliminar usuario, le mandamos el usuario seleccionado
+      // al componente padre, esto para verificar que no se elimine el usuario actual
+      sendDataToParent(selectedUser.id, action, user);
     }
   }
 
@@ -68,27 +70,22 @@ export const CowsData = ({
   const columns = [
     {
       name: "Código",
-      selector: (row) => row.cow_code,
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Usuario",
+      selector: (row) => row.username,
       sortable: true,
     },
     {
       name: "Nombre",
-      selector: (row) => row.cow_name,
+      selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: "Raza",
-      selector: (row) => row.cow_breed,
-      sortable: true,
-    },
-    {
-      name: "Peso",
-      selector: (row) => row.cow_weight,
-      sortable: true,
-    },
-    {
-      name: "Partos",
-      selector: (row) => row.cow_childs,
+      name: "Tipo",
+      selector: (row) => row.type,
       sortable: true,
     },
     {
@@ -97,13 +94,13 @@ export const CowsData = ({
         <div className="flex gap-[5px]">
           <button
             className="text-white bg-cyan-500 p-[3px] rounded-md hover:bg-cyan-700 duration-75"
-            onClick={() => onSelectedCow(row.cow_code, "edit")}
+            onClick={() => onSelectedUser(row.id, "edit", row.username)}
           >
             <Pencil size={15} />
           </button>
           <button
             className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-700 duration-75"
-            onClick={() => onSelectedCow(row.cow_code, "delete")}
+            onClick={() => onSelectedUser(row.id, "delete", row.username)}
           >
             <Trash2 size={15} />
           </button>
@@ -114,8 +111,8 @@ export const CowsData = ({
 
   // Usamos useEffect para filtrar los datos
   useEffect(() => {
-    const result = cowData.filter((cow) => {
-      return cow.cow_name.toLowerCase().match(search.toLocaleLowerCase());
+    const result = userData.filter((user) => {
+      return user.name.toLowerCase().match(search.toLocaleLowerCase());
     });
     setFilter(result);
   }, [search]);
@@ -124,7 +121,7 @@ export const CowsData = ({
   const tableHeaderStyle = {
     headCells: {
       style: {
-        backgroundColor: "#c05621",
+        backgroundColor: "#1e293b",
         fontSize: "15px",
         color: "#FFFFFF",
         fontWeight: "600",
@@ -147,10 +144,10 @@ export const CowsData = ({
 
   // Función que permite exportar los registros en formato XLSX
   const converToXLSX = () => {
-    const ws = XLSX.utils.json_to_sheet(cowData);
+    const ws = XLSX.utils.json_to_sheet(userData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    const fileName = "cowsData.xlsx";
+    const fileName = "usersData.xlsx";
     XLSX.writeFile(wb, fileName);
   };
 

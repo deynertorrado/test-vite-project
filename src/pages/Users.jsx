@@ -11,7 +11,7 @@ import {
 import Swal from "sweetalert2";
 
 // Importación de Componentes
-import { UsersData } from "../components/UsersData";
+import { UsersData } from "../components/users/UsersData";
 
 // Iconos
 import { EyeOff, Eye } from "lucide-react";

@@ -70,14 +70,25 @@ export const Layout = () => {
   // Método que permite movernos entre los componentes definidos en el router
   const onHandleSection = (title) => {
     const navigateTo = title;
-    navigate(`/Inicio/${navigateTo}`, {
-      state: {
-        name: name,
-        userName: userName,
-        userType: userType,
-        logged: true
-      },
-    })
+    if (navigateTo === 'Produccion') {
+      navigate(`/Inicio/${navigateTo}/Agregar`, {
+        state: {
+          name: name,
+          userName: userName,
+          userType: userType,
+          logged: true
+        },
+      })
+    } else {
+      navigate(`/Inicio/${navigateTo}`, {
+        state: {
+          name: name,
+          userName: userName,
+          userType: userType,
+          logged: true
+        },
+      })
+    }
   };
 
   // Método que nos permite salir del sistema

@@ -7,8 +7,8 @@ import { Manage } from "./pages/Manage";
 import { General } from "./pages/General";
 import { NoPage } from "./pages/NoPage";
 import { Logout } from "./pages/Logout";
-import { ProdComponent } from "./components/ProdComponent";
-import { ProdGraphic } from "./components/ProdGraphic";
+import { ProdComponent } from "./components/production/ProdComponent";
+import { ProdGraphic } from "./components/production/ProdGraphic";
 
 function App() {
   return (

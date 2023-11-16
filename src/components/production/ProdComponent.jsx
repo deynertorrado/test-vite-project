@@ -7,7 +7,7 @@ import {
   putProductionRequest,
   deleteProductionRequest,
   getCowsRequest,
-} from "../services/request";
+} from "../../services/request";
 import Swal from "sweetalert2";
 
 // Importación de Componentes

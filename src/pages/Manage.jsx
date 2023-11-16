@@ -7,7 +7,7 @@ import { postCowsRequest, putCowsRequest, deleteCowsRequest } from "../services/
 import Swal from "sweetalert2";
 
 // Importación de Componentes
-import { CowsData } from "../components/CowsData"
+import { CowsData } from "../components/cows/CowsData"
 
 // Componente Principal
 export const Manage = () => {
