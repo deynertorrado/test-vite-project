@@ -329,7 +329,7 @@ export const ProdComponent = () => {
           <p className="text-xl text-gray-800 font-semibold mb-3 ml-2">
             Agregar Producción
           </p>
-          <form className="w-full bg-white shadow-xl rounded-md py-5 px-7">
+          <form className="w-full bg-white shadow-md shadow-gray-200 rounded-md py-5 px-7">
             <div className="mb-2">
               <label htmlFor="cow" className="block mb-2 text-md font-bold">
                 Vaca:
@@ -428,7 +428,7 @@ export const ProdComponent = () => {
             )}
           </div>
         </div>
-        <div className="w-[60%] bg-white max-h-[480px] shadow-xl rounded-md py-5 px-6">
+        <div className="w-[60%] bg-white max-h-[480px] shadow-md shadow-gray-200 rounded-md py-5 px-6">
           <ProdData
             sendDataToParent={getSonData}
             activateEffect={activateEffect}

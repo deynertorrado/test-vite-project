@@ -311,7 +311,7 @@ export const Users = () => {
           <p className="text-xl text-gray-800 font-semibold mb-3">
             Agregar nuevo usuario
           </p>
-          <form className="w-full bg-white shadow-xl rounded-md py-5 px-7">
+          <form className="w-full bg-white shadow-md shadow-gray-200 rounded-md py-5 px-7">
             <div className="flex gap-5 text-gray-800">
               <div className="mb-2">
                 <label
@@ -429,7 +429,7 @@ export const Users = () => {
             )}
           </div>
         </div>
-        <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
+        <div className="w-[60%] bg-white max-h-[500px] shadow-md shadow-gray-200 rounded-md py-5 px-6">
           <UsersData
             sendDataToParent={getSonData}
             activateEffect={activateEffect}

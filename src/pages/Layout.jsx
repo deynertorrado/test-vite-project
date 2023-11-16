@@ -165,7 +165,7 @@ export const Layout = () => {
               <li 
                 className="font-semibold text-white text-md flex items-center gap-x-4 cursor-pointer p-1 mb-3 hover:bg-slate-900 duration-75 ease-in rounded-md"
                 onClick={onShowUserInfo}>
-                <span className="shadow-md shadow-slate-900 bg-emerald-600 rounded-md p-2">
+                <span className="shadow-md shadow-slate-900 bg-slate-600 rounded-md p-2">
                   <UserSquare2 size={20} />
                 </span>
                 <span
@@ -191,7 +191,7 @@ export const Layout = () => {
             </ul>
           </div>
         </aside>
-        <section className="ml-20 bg-gray-100 w-full h-screen">
+        <section className="ml-20 bg-gray-50 w-full h-screen">
           <Outlet />
         </section>
       </main>

@@ -120,7 +120,7 @@ export const ProdData = ({
   const tableHeaderStyle = {
     headCells: {
       style: {
-        backgroundColor: "#1e293b",
+        backgroundColor: "#c05621",
         fontSize: "15px",
         color: "#FFFFFF",
         fontWeight: "600",

@@ -269,7 +269,7 @@ export const Manage = () => {
       <div className="flex w-full gap-4">
         <div className="mt-3 ml-4 p-4 w-[35%]">
           <p className="text-xl text-gray-800 font-semibold mb-3">Agregar nueva vaca</p>
-          <form className="w-full bg-white shadow-xl rounded-md py-5 px-7">
+          <form className="w-full bg-white shadow-md shadow-gray-200 rounded-md py-5 px-7">
             <div className="flex gap-5 text-gray-800">
               <div className="mb-2">
                 <label htmlFor="cowName" className="block mb-2 text-md font-bold">Nombre:</label>
@@ -378,7 +378,7 @@ export const Manage = () => {
             }
           </div>
         </div>
-        <div className="w-[60%] bg-white max-h-[500px] shadow-xl rounded-md py-5 px-6">
+        <div className="w-[60%] bg-white max-h-[500px] shadow-md shadow-gray-200 rounded-md py-5 px-6">
           <CowsData sendDataToParent={getSonData} activateEffect={activateEffect} resetActivateEffect={resetActivateEffect} logged={logged}/>
         </div>
       </div>
