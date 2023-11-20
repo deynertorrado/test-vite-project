@@ -1,5 +1,6 @@
 // Importaciones de React
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 // Librerías Externas y Locales
 import {
@@ -15,6 +16,16 @@ import { ProdData } from "./ProdData";
 
 // Componente Principal
 export const ProdComponent = () => {
+  const { state } = useLocation();
+  let userType = state.userType;
+
+  const [disableForm, setDisableForm] = useState(false);
+  useEffect(() => {
+    if (userType === "Normal") {
+      setDisableForm(true);
+    }
+  }, []);
+
   // ------------- Proceso para tomar los datos -------------
   // Estado Inicial del "productionForm"
   const productionForm = {
@@ -92,63 +103,78 @@ export const ProdComponent = () => {
   };
 
   // ------------ Proceso para enviar, validar y almacenar los datos -------------
-  // Enviamos los datos del "cowForm" a la API para validarlos y guardar una nueva Vaquita
+  // Enviamos los datos del "productionForm" a la API para validarlos y guardar una nueva producción
   const onSubmitForm = async (e) => {
-    e.preventDefault();
-    const verifyInputs = Object.values(formState).every(
-      (value) => value !== ""
-    );
-    if (verifyInputs) {
-      const data = {
-        ...formState,
-        cowID: cowId,
-      };
-      const res = await postProductionRequest(
-        data,
-        document.cookie.replace("token=", "")
-      );
-      const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
+    if (disableForm) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `¡No puedes realizar esta acción!`,
         showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
+        timerProgressBar: 1000,
+        timer: 1000,
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
       });
-      if (res.status == 200) {
-        toast.fire({
-          icon: "success",
-          title: "¡Se ha agregado correctamente!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
+    } else {
+      e.preventDefault();
+      const verifyInputs = Object.values(formState).every(
+        (value) => value !== ""
+      );
+      if (verifyInputs) {
+        const data = {
+          ...formState,
+          cowID: cowId,
+        };
+        const res = await postProductionRequest(
+          data,
+          document.cookie.replace("token=", "")
+        );
+        const toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
         });
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true);
+        if (res.status == 200) {
+          toast.fire({
+            icon: "success",
+            title: "¡Se ha agregado correctamente!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+          // Actualizamos los datos de la tabla
+          setActivateEffect(true);
+        } else {
+          toast.fire({
+            icon: "error",
+            title: "¡Ocurrió un error!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+        }
       } else {
-        toast.fire({
+        Swal.fire({
+          position: "center",
           icon: "error",
-          title: "¡Ocurrió un error!",
+          title: "¡Los campos no están llenos!",
+          showConfirmButton: false,
+          timer: 1500,
           customClass: {
             popup: "popup-class",
             title: "title-class",
           },
         });
       }
-    } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "¡Los campos no están llenos!",
-        showConfirmButton: false,
-        timer: 1500,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      });
+      resetFormState();
     }
-    resetFormState();
   };
 
   // ------------- Proceso para actualizar los datos -------------
@@ -181,83 +207,98 @@ export const ProdComponent = () => {
 
   // Enviamos los datos del "productionForm" a la API para validarlos y actualizar la Producción
   const onEditData = (e) => {
-    async function putData() {
-      const data = {
-        ...formState,
-        productionId: selectedProductionID,
-        cowID: selectedCowID,
-      };
-      const res = await putProductionRequest(
-        data,
-        document.cookie.replace("token=", "")
-      );
-      const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
+    if (disableForm) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `¡No puedes realizar esta acción!`,
         showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
+        timerProgressBar: 1000,
+        timer: 1000,
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
       });
-      if (res.status == 200) {
-        toast.fire({
-          icon: "success",
-          title: "¡Se ha actualizado correctamente!",
+    } else {
+      async function putData() {
+        const data = {
+          ...formState,
+          productionId: selectedProductionID,
+          cowID: selectedCowID,
+        };
+        const res = await putProductionRequest(
+          data,
+          document.cookie.replace("token=", "")
+        );
+        const toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        if (res.status == 200) {
+          toast.fire({
+            icon: "success",
+            title: "¡Se ha actualizado correctamente!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+          // Actualizamos los datos de la tabla
+          setActivateEffect(true);
+        } else {
+          toast.fire({
+            icon: "error",
+            title: "¡Ocurrió un error!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+        }
+      }
+      e.preventDefault();
+      const verifyInputs = Object.values(formState).every(
+        (value) => value !== ""
+      );
+      if (verifyInputs) {
+        Swal.fire({
+          title: "¿Deseas actualizar los datos?",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Actualizar",
           customClass: {
             popup: "popup-class",
             title: "title-class",
           },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            putData();
+            setEditar(false);
+          } else {
+            resetFormState();
+            setEditar(false);
+          }
         });
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true);
       } else {
-        toast.fire({
+        Swal.fire({
+          position: "center",
           icon: "error",
-          title: "¡Ocurrió un error!",
+          title: "¡Los campos no están llenos!",
+          showConfirmButton: false,
+          timerProgressBar: 1500,
+          timer: 1500,
           customClass: {
             popup: "popup-class",
             title: "title-class",
           },
         });
       }
+      resetFormState();
     }
-    e.preventDefault();
-    const verifyInputs = Object.values(formState).every(
-      (value) => value !== ""
-    );
-    if (verifyInputs) {
-      Swal.fire({
-        title: "¿Deseas actualizar los datos?",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Actualizar",
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          putData();
-          setEditar(false);
-        } else {
-          resetFormState();
-          setEditar(false);
-        }
-      });
-    } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "¡Los campos no están llenos!",
-        showConfirmButton: false,
-        timerProgressBar: 1500,
-        timer: 1500,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      });
-    }
-    resetFormState();
   };
 
   // Cancelar actualizacion de datos
@@ -268,58 +309,73 @@ export const ProdComponent = () => {
 
   // ------------- Proceso para eliminar datos -------------
   const onDeleteData = (productionID) => {
-    async function deleteData() {
-      const res = await deleteProductionRequest(
-        productionID,
-        document.cookie.replace("token=", "")
-      );
-      const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
+    if (disableForm) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `¡No puedes realizar esta acción!`,
         showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
+        timerProgressBar: 1000,
+        timer: 1000,
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
       });
-      if (res.status == 200) {
-        toast.fire({
-          icon: "success",
-          title: "¡Se ha eliminado correctamente!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
+    } else {
+      async function deleteData() {
+        const res = await deleteProductionRequest(
+          productionID,
+          document.cookie.replace("token=", "")
+        );
+        const toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
         });
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true);
-      } else {
-        toast.fire({
-          icon: "error",
-          title: "¡Ocurrió un error!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
-        });
+        if (res.status == 200) {
+          toast.fire({
+            icon: "success",
+            title: "¡Se ha eliminado correctamente!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+          // Actualizamos los datos de la tabla
+          setActivateEffect(true);
+        } else {
+          toast.fire({
+            icon: "error",
+            title: "¡Ocurrió un error!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+        }
       }
+      Swal.fire({
+        title: "¿Estás segur@?",
+        text: "¡No podrás revertir esta acción!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, eliminar",
+        cancelButtonText: "No, cancelar",
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteData();
+        }
+      });
     }
-    Swal.fire({
-      title: "¿Estás segur@?",
-      text: "¡No podrás revertir esta acción!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, eliminar",
-      cancelButtonText: "No, cancelar",
-      customClass: {
-        popup: "popup-class",
-        title: "title-class",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteData();
-      }
-    });
   };
 
   return (
@@ -330,65 +386,68 @@ export const ProdComponent = () => {
             Agregar Producción
           </p>
           <form className="w-full bg-white shadow-md shadow-gray-200 rounded-md py-5 px-7">
-            <div className="mb-2">
-              <label htmlFor="cow" className="block mb-2 text-md font-bold">
-                Vaca:
-              </label>
-              <input
-                type="text"
-                name="cow"
-                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                placeholder="Buscar vaca"
-                value={text}
-                onChange={(e) => onChangeHandler(e.target.value)}
-                required
-              ></input>
-              <div className="absolute shadow-lg bg-gray-200 w-[320px]">
-                {suggestions &&
-                  suggestions.map((suggestions, i) => (
-                    <div
-                      className="px-3 py-2 cursor-pointer hover:bg-gray-300"
-                      onClick={() =>
-                        onSuggestHandler(suggestions.cow_name, suggestions.id)
-                      }
-                      key={i}
-                    >
-                      {suggestions.cow_name}
-                    </div>
-                  ))}
+            <fieldset disabled={disableForm}>
+              <div className="mb-2">
+                <label htmlFor="cow" className="block mb-2 text-md font-bold">
+                  Vaca:
+                </label>
+                <input
+                  type="text"
+                  name="cow"
+                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                  placeholder="Buscar vaca"
+                  value={text}
+                  onChange={(e) => onChangeHandler(e.target.value)}
+                  required
+                ></input>
+                <div className="absolute shadow-lg bg-gray-200 w-[320px]">
+                  {suggestions &&
+                    suggestions.map((suggestions, i) => (
+                      <div
+                        className="px-3 py-2 cursor-pointer hover:bg-gray-300"
+                        onClick={() =>
+                          onSuggestHandler(suggestions.cow_name, suggestions.id)
+                        }
+                        key={i}
+                      >
+                        {suggestions.cow_name}
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
-            <div className="mb-2">
-              <label htmlFor="date" className="block mb-2 text-md font-bold">
-                Fecha de Producción:
-              </label>
-              <input
-                type="date"
-                name="date"
-                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                placeholder=""
-                value={date}
-                onChange={onInputChange}
-                required
-              ></input>
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="production"
-                className="block mb-2 text-md font-bold"
-              >
-                Litros:
-              </label>
-              <input
-                type="number"
-                name="production"
-                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                placeholder="Litros"
-                value={production}
-                onChange={onInputChange}
-                required
-              ></input>
-            </div>
+              <div className="mb-2">
+                <label htmlFor="date" className="block mb-2 text-md font-bold">
+                  Fecha de Producción:
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                  placeholder=""
+                  value={date}
+                  onChange={onInputChange}
+                  required
+                  disabled={disableForm}
+                ></input>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="production"
+                  className="block mb-2 text-md font-bold"
+                >
+                  Litros:
+                </label>
+                <input
+                  type="number"
+                  name="production"
+                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                  placeholder="Litros"
+                  value={production}
+                  onChange={onInputChange}
+                  required
+                ></input>
+              </div>
+            </fieldset>
           </form>
           <div className="mt-6 ml-4">
             {editar ? (
@@ -433,6 +492,7 @@ export const ProdComponent = () => {
             sendDataToParent={getSonData}
             activateEffect={activateEffect}
             resetActivateEffect={resetActivateEffect}
+            disable={disableForm}
           />
         </div>
       </div>

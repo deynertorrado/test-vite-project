@@ -14,7 +14,7 @@ export const CowsData = ({
   sendDataToParent,
   activateEffect,
   resetActivateEffect,
-  logged,
+  disable,
 }) => {
   // ------------- Proceso para traer los datos de las Vaquitas en la API -------------
   // Definimos los estados para almacenar las Vaquitas
@@ -96,13 +96,15 @@ export const CowsData = ({
       selector: (row) => (
         <div className="flex gap-[5px]">
           <button
+            disabled={disable}
             className="text-white bg-cyan-500 p-[3px] rounded-md hover:bg-cyan-700 duration-75"
             onClick={() => onSelectedCow(row.cow_code, "edit")}
           >
             <Pencil size={15} />
           </button>
           <button
-            className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-700 duration-75"
+            disabled={disable}
+            className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-800 duration-75"
             onClick={() => onSelectedCow(row.cow_code, "delete")}
           >
             <Trash2 size={15} />

@@ -14,7 +14,7 @@ export const UsersData = ({
   sendDataToParent,
   activateEffect,
   resetActivateEffect,
-  logged,
+  disable,
 }) => {
   // ------------- Proceso para traer los datos de los Usuarios en la API -------------
   // Definimos los estados para almacenar los Usuarios
@@ -93,12 +93,14 @@ export const UsersData = ({
       selector: (row) => (
         <div className="flex gap-[5px]">
           <button
+            disabled={disable}
             className="text-white bg-cyan-500 p-[3px] rounded-md hover:bg-cyan-700 duration-75"
             onClick={() => onSelectedUser(row.id, "edit", row.username)}
           >
             <Pencil size={15} />
           </button>
           <button
+            disabled={disable}
             className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-700 duration-75"
             onClick={() => onSelectedUser(row.id, "delete", row.username)}
           >

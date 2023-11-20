@@ -1,5 +1,5 @@
 // Importaciones de React
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // Librerías Externas y Locales
@@ -18,8 +18,15 @@ import { EyeOff, Eye } from "lucide-react";
 
 export const Users = () => {
   const { state } = useLocation();
-  let logged = state.logged;
   let currentlyUser = state.userName;
+  let UserType = state.userType;
+
+  const [disableForm, setDisableForm] = useState(false);
+  useEffect(() => {
+    if (UserType === "Normal") {
+      setDisableForm(true);
+    }
+  }, []);
 
   // ------------- Proceso para tomar los datos -------------
   // Estado Inicial del "userForm"
@@ -59,57 +66,72 @@ export const Users = () => {
   // ------------ Proceso para enviar, validar y almacenar los datos -------------
   // Enviamos los datos del "userForm" a la API para validarlos y guardar un nuevo Usuario
   const onSubmitForm = async (e) => {
-    e.preventDefault();
-    const verifyInputs = Object.values(formState).every(
-      (value) => value !== ""
-    );
-    if (verifyInputs) {
-      const res = await postUserRequest(
-        formState,
-        document.cookie.replace("token=", "")
-      );
-      const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
+    if (disableForm) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: `¡No puedes realizar esta acción!`,
         showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
+        timerProgressBar: 1000,
+        timer: 1000,
+        customClass: {
+          popup: "popup-class",
+          title: "title-class",
+        },
       });
-      if (res.status == 200) {
-        toast.fire({
-          icon: "success",
-          title: "¡Se ha agregado correctamente!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
+    } else {
+      e.preventDefault();
+      const verifyInputs = Object.values(formState).every(
+        (value) => value !== ""
+      );
+      if (verifyInputs) {
+        const res = await postUserRequest(
+          formState,
+          document.cookie.replace("token=", "")
+        );
+        const toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
         });
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true);
+        if (res.status == 200) {
+          toast.fire({
+            icon: "success",
+            title: "¡Se ha agregado correctamente!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+          // Actualizamos los datos de la tabla
+          setActivateEffect(true);
+        } else {
+          toast.fire({
+            icon: "error",
+            title: "¡Ocurrió un error!",
+            customClass: {
+              popup: "popup-class",
+              title: "title-class",
+            },
+          });
+        }
       } else {
-        toast.fire({
+        Swal.fire({
+          position: "center",
           icon: "error",
-          title: "¡Ocurrió un error!",
+          title: "¡Los campos no están llenos!",
+          showConfirmButton: false,
+          timer: 1500,
           customClass: {
             popup: "popup-class",
             title: "title-class",
           },
         });
       }
-    } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "¡Los campos no están llenos!",
-        showConfirmButton: false,
-        timer: 1500,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      });
+      resetFormState();
     }
-    resetFormState();
   };
 
   // ------------- Proceso para actualizar los datos -------------
@@ -142,109 +164,24 @@ export const Users = () => {
 
   // Enviamos los datos del "userForm" a la API para validarlos y actualizar el Usuario
   const onEditData = (e) => {
-    async function putData() {
-      const data = { ...formState, userId: selectedUserID };
-      const res = await putUserRequest(
-        data,
-        document.cookie.replace("token=", "")
-      );
-      const toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-      });
-      if (res.status == 200) {
-        toast.fire({
-          icon: "success",
-          title: "¡Se ha actualizado correctamente!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
-        });
-        // Actualizamos los datos de la tabla
-        setActivateEffect(true);
-      } else {
-        toast.fire({
-          icon: "error",
-          title: "¡Ocurrió un error!",
-          customClass: {
-            popup: "popup-class",
-            title: "title-class",
-          },
-        });
-      }
-    }
-    e.preventDefault();
-    const verifyInputs = Object.values(formState).every(
-      (value) => value !== ""
-    );
-    if (verifyInputs) {
-      Swal.fire({
-        title: "¿Deseas actualizar los datos?",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Actualizar",
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          putData();
-          setEditar(false);
-        } else {
-          resetFormState();
-          setEditar(false);
-        }
-      });
-    } else {
+    if (disableForm) {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "¡Los campos no están llenos!",
+        title: `¡No puedes realizar esta acción!`,
         showConfirmButton: false,
-        timerProgressBar: 1500,
-        timer: 1500,
-        customClass: {
-          popup: "popup-class",
-          title: "title-class",
-        },
-      });
-    }
-    resetFormState();
-  };
-
-  // Cancelar actualizacion de datos
-  const onCancelUpdate = () => {
-    setEditar(false);
-    resetFormState();
-  };
-
-  // ------------- Proceso para eliminar datos -------------
-  const onDeleteData = (userID, user) => {
-    // Verificamos si el usuario a eliminar es el mismo que el usuario actual, en ese
-    // rechazamos la ejecución de la función y mandamos una advertencia
-    if (currentlyUser == user) {
-      Swal.fire({
-        title: "¡Error!",
-        text: "¡No puedes realizar esta acción!",
-        icon: "error",
-        showCancelButton: false,
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
+        timerProgressBar: 1000,
+        timer: 1000,
         customClass: {
           popup: "popup-class",
           title: "title-class",
         },
       });
     } else {
-      async function deleteData() {
-        const res = await deleteUserRequest(
-          userID,
+      async function putData() {
+        const data = { ...formState, userId: selectedUserID };
+        const res = await putUserRequest(
+          data,
           document.cookie.replace("token=", "")
         );
         const toast = Swal.mixin({
@@ -257,7 +194,7 @@ export const Users = () => {
         if (res.status == 200) {
           toast.fire({
             icon: "success",
-            title: "¡Se ha eliminado correctamente!",
+            title: "¡Se ha actualizado correctamente!",
             customClass: {
               popup: "popup-class",
               title: "title-class",
@@ -276,24 +213,139 @@ export const Users = () => {
           });
         }
       }
+      e.preventDefault();
+      const verifyInputs = Object.values(formState).every(
+        (value) => value !== ""
+      );
+      if (verifyInputs) {
+        Swal.fire({
+          title: "¿Deseas actualizar los datos?",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Actualizar",
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            putData();
+            setEditar(false);
+          } else {
+            resetFormState();
+            setEditar(false);
+          }
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "¡Los campos no están llenos!",
+          showConfirmButton: false,
+          timerProgressBar: 1500,
+          timer: 1500,
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        });
+      }
+      resetFormState();
+    }
+  };
+
+  // Cancelar actualizacion de datos
+  const onCancelUpdate = () => {
+    setEditar(false);
+    resetFormState();
+  };
+
+  // ------------- Proceso para eliminar datos -------------
+  const onDeleteData = (userID, user) => {
+    if (disableForm) {
       Swal.fire({
-        title: "¿Estás segur@?",
-        text: "¡No podrás revertir esta acción!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, eliminar",
-        cancelButtonText: "No, cancelar",
+        position: "center",
+        icon: "error",
+        title: `¡No puedes realizar esta acción!`,
+        showConfirmButton: false,
+        timerProgressBar: 1000,
+        timer: 1000,
         customClass: {
           popup: "popup-class",
           title: "title-class",
         },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteData();
-        }
       });
+    } else {
+      // Verificamos si el usuario a eliminar es el mismo que el usuario actual, en ese
+      // rechazamos la ejecución de la función y mandamos una advertencia
+      if (currentlyUser == user) {
+        Swal.fire({
+          title: "¡Error!",
+          text: "¡No puedes realizar esta acción!",
+          icon: "error",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        });
+      } else {
+        async function deleteData() {
+          const res = await deleteUserRequest(
+            userID,
+            document.cookie.replace("token=", "")
+          );
+          const toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          if (res.status == 200) {
+            toast.fire({
+              icon: "success",
+              title: "¡Se ha eliminado correctamente!",
+              customClass: {
+                popup: "popup-class",
+                title: "title-class",
+              },
+            });
+            // Actualizamos los datos de la tabla
+            setActivateEffect(true);
+          } else {
+            toast.fire({
+              icon: "error",
+              title: "¡Ocurrió un error!",
+              customClass: {
+                popup: "popup-class",
+                title: "title-class",
+              },
+            });
+          }
+        }
+        Swal.fire({
+          title: "¿Estás segur@?",
+          text: "¡No podrás revertir esta acción!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, eliminar",
+          cancelButtonText: "No, cancelar",
+          customClass: {
+            popup: "popup-class",
+            title: "title-class",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteData();
+          }
+        });
+      }
     }
   };
 
@@ -312,84 +364,89 @@ export const Users = () => {
             Agregar nuevo usuario
           </p>
           <form className="w-full bg-white shadow-md shadow-gray-200 rounded-md py-5 px-7">
-            <div className="flex gap-5 text-gray-800">
+            <fieldset disabled={disableForm}>
+              <div className="flex gap-5 text-gray-800">
+                <div className="mb-2">
+                  <label
+                    htmlFor="userName"
+                    className="block mb-2 text-md font-bold"
+                  >
+                    Nombre:
+                  </label>
+                  <input
+                    type="text"
+                    name="userName"
+                    className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                    placeholder="Nombre"
+                    onChange={onInputChange}
+                    value={userName}
+                    required
+                  ></input>
+                </div>
+                <div className="mb-2">
+                  <label
+                    htmlFor="user"
+                    className="block mb-2 text-md font-bold"
+                  >
+                    Usuario:
+                  </label>
+                  <input
+                    type="text"
+                    name="user"
+                    className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
+                    placeholder="Usuario"
+                    onChange={onInputChange}
+                    value={user}
+                    required
+                  ></input>
+                </div>
+              </div>
               <div className="mb-2">
                 <label
-                  htmlFor="userName"
+                  htmlFor="userType"
                   className="block mb-2 text-md font-bold"
                 >
-                  Nombre:
+                  Tipo:
                 </label>
-                <input
-                  type="text"
-                  name="userName"
+                <select
+                  name="userType"
                   className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                  placeholder="Nombre"
-                  onChange={onInputChange}
-                  value={userName}
+                  onInput={onInputChange}
+                  value={userType}
                   required
-                ></input>
-              </div>
-              <div className="mb-2">
-                <label htmlFor="user" className="block mb-2 text-md font-bold">
-                  Usuario:
-                </label>
-                <input
-                  type="text"
-                  name="user"
-                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                  placeholder="Usuario"
-                  onChange={onInputChange}
-                  value={user}
-                  required
-                ></input>
-              </div>
-            </div>
-            <div className="mb-2">
-              <label
-                htmlFor="userType"
-                className="block mb-2 text-md font-bold"
-              >
-                Tipo:
-              </label>
-              <select
-                name="userType"
-                className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg"
-                onInput={onInputChange}
-                value={userType}
-                required
-              >
-                <option value="">-- Selecciona un tipo --</option>
-                <option value="Normal">Normal</option>
-                <option value="Administrativo">Administrativo</option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="userPassword"
-                className="block mb-2 text-md font-bold"
-              >
-                Contraseña:
-              </label>
-              <div className="flex">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="userPassword"
-                  className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg rounded-tr-none rounded-br-none"
-                  placeholder="Contraseña"
-                  onChange={onInputChange}
-                  value={userPassword}
-                  required
-                ></input>
-                <button
-                  onClick={toggleShowPassword}
-                  className="px-3 bg-gray-200 rounded-tr-lg rounded-br-lg"
-                  type="button"
                 >
-                  {!showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                  <option value="">-- Selecciona un tipo --</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Administrativo">Administrativo</option>
+                </select>
               </div>
-            </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="userPassword"
+                  className="block mb-2 text-md font-bold"
+                >
+                  Contraseña:
+                </label>
+                <div className="flex">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="userPassword"
+                    className="text-md font-Lato text-gray-800 bg-white placeholder-gray-500 pl-2 pr-2 border-2 border-gray-200 w-full py-2 focus:outline-none focus:border-slate-500 rounded-lg rounded-tr-none rounded-br-none"
+                    placeholder="Contraseña"
+                    onChange={onInputChange}
+                    value={userPassword}
+                    required
+                  ></input>
+                  <button
+                    onClick={toggleShowPassword}
+                    className="px-3 bg-gray-200 rounded-tr-lg rounded-br-lg"
+                    type="button"
+                  >
+                    {!showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+            </fieldset>
           </form>
           <div className="mt-6 ml-4">
             {editar ? (
@@ -434,7 +491,7 @@ export const Users = () => {
             sendDataToParent={getSonData}
             activateEffect={activateEffect}
             resetActivateEffect={resetActivateEffect}
-            logged={logged}
+            disable={disableForm}
           />
         </div>
       </div>

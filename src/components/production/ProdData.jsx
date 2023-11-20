@@ -13,6 +13,7 @@ export const ProdData = ({
   sendDataToParent,
   activateEffect,
   resetActivateEffect,
+  disable,
 }) => {
   // ------------- Proceso para traer los datos de la Producción en la API -------------
   // Definimos los estados para almacenar los Usuarios
@@ -90,12 +91,14 @@ export const ProdData = ({
       selector: (row) => (
         <div className="flex gap-[5px]">
           <button
+            disabled={disable}
             className="text-white bg-cyan-500 p-[3px] rounded-md hover:bg-cyan-700 duration-75"
             onClick={() => onSelectedProduction(row.id, "edit")}
           >
             <Pencil size={15} />
           </button>
           <button
+            disabled={disable}
             className="text-white bg-red-600 p-[3px] rounded-md hover:bg-red-700 duration-75"
             onClick={() => onSelectedProduction(row.id, "delete")}
           >
