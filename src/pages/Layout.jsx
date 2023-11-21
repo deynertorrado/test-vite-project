@@ -56,7 +56,7 @@ export const Layout = () => {
       // En caso de que el usuario no esté autenticado lo redirigimos al Login
       navigate("/");
     } else {
-      navigate("/Inicio/Gestionar", {
+      navigate("/Inicio/General", {
         state: {
           name: name,
           userName: userName,
