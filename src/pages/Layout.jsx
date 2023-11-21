@@ -35,10 +35,10 @@ export const Layout = () => {
 
   // Opciones de navegación
   const options = [
+    { title: "General", icon: <ScanText size={20} /> },
     { title: "Gestionar", icon: <LayoutDashboard size={20} /> },
     { title: "Usuarios", icon: <Users size={20} /> },
     { title: "Produccion", icon: <PackagePlus size={20} /> },
-    { title: "General", icon: <ScanText size={20} /> },
   ];
 
   // ------------------------ Autenticación ------------------------
