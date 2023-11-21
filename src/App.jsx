@@ -22,7 +22,7 @@ function App() {
           <Route path="Usuarios" element={<Users />} />
           <Route path="Produccion" element={<Production />} >
             <Route path="Agregar" element={<ProdComponent />} />
-            <Route path="Consultar" element={<ProdGraphic />} />
+            <Route path="Grafica" element={<ProdGraphic />} />
           </Route>
           <Route path="General" element={<General />} />
         </Route>

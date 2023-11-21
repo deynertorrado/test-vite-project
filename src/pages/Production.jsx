@@ -54,7 +54,7 @@ export const Production = () => {
             </li>
             <li
               className="flex items-center py-2 px-4 w-full justify-center border-b-2 hover:bg-gray-300 hover:border-gray-400 duration-100"
-              onClick={() => onHandleSection("Consultar")}
+              onClick={() => onHandleSection("Grafica")}
             >
               <span>
                 <BarChart size={16} />

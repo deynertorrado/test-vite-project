@@ -191,7 +191,7 @@ export const Layout = () => {
             </ul>
           </div>
         </aside>
-        <section className="ml-20 bg-gray-50 w-full h-screen">
+        <section className="ml-20 bg-gray-50 w-screen h-screen">
           <Outlet />
         </section>
       </main>
